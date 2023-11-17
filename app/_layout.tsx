@@ -4,6 +4,14 @@ import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
+import { PaperProvider } from 'react-native-paper';
+import { SaleProvider } from '../provider/SaleContext';
+import { es, registerTranslation } from 'react-native-paper-dates'
+import { ProductProvider } from '../provider/ProductContext';
+import { ClientProvider } from '../provider/ClientContext';
+import { CategoryProvider } from '../provider/CategoryContext';
+import { SnackBarProvider } from '../provider/SnackBarContext';
+registerTranslation('es', es);
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -46,11 +54,22 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-      </Stack>
-    </ThemeProvider>
+    <PaperProvider>
+      <SnackBarProvider>
+      <SaleProvider>
+      <ProductProvider>
+      <ClientProvider>
+      <CategoryProvider>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        </Stack>
+      </ThemeProvider>
+      </CategoryProvider>
+      </ClientProvider>
+      </ProductProvider>
+      </SaleProvider>
+      </SnackBarProvider>
+    </PaperProvider>
   );
 }
