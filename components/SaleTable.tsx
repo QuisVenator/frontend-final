@@ -40,12 +40,12 @@ const SaleTable = () => {
   }, [itemsPerPage, filteredSales]);
 
 
-  const sendEmail = async(file:string[]) => {
+  const sendEmail = async(file:string[], to: string) => {
     var options = {}
     options = {
-      subject: "Sending email with attachment",
-      recipients: ["diemanuel58@gmail.com"],
-      body: "Enter email body here...",
+      subject: "Factura de FRONTEND",
+      recipients: [to],
+      body: "Le pasamos su factura de front:",
       attachments: file
     }  
     let promise = new Promise<MailComposer.MailComposerResult>((resolve, reject) => {
@@ -58,7 +58,7 @@ const SaleTable = () => {
         })
       })
     promise.then(
-      result => console.log("Status result: email " + result.status),
+      result => {},
       error => console.log("Status error: email ", error)
      )
   }
@@ -114,7 +114,7 @@ const SaleTable = () => {
        html: html,
        base64: true
     });
-    sendEmail([print.uri]);
+    sendEmail([print.uri], client.email);
     
   
     try {
