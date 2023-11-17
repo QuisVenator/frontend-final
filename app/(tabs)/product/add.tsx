@@ -68,7 +68,7 @@ const ProductAdd = () => {
           </View>
           <TextInput
             label="Precio"
-            value={productAdd.price.toString()}
+            value={productAdd.price ? productAdd.price.toString() : ''}
             onChangeText={(text) =>
               setProductAdd({ ...productAdd, price: parseInt(text) })
             }

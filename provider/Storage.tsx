@@ -50,15 +50,15 @@ export const loadMockData = (): [Client[], Category[], Product[], Sale[]] => {
   ]
 
   let sales: Sale[] = [
-    { id: 1, billId: 1, total: 15_000, details: [
+    { id: 1, billId: 1, total: 15_000, date: new Date("2023-11-20 00:00:00"), clientId: '1234567-2',  details: [
       { productId: 1, quantity: 1},
       { productId: 3, quantity: 1},
     ]},
-    { id: 2, billId: 2, total: 20_000, details: [
+    { id: 2, billId: 2, total: 20_000, date: new Date("2023-11-20 00:00:00"), clientId: '1234567-2', details: [
       { productId: 2, quantity: 1},
       { productId: 4, quantity: 1},
     ]},
-    { id: 3, billId: 3, total: 15_000, details: [
+    { id: 3, billId: 3, total: 15_000, date: new Date("2023-11-20 00:00:00"), clientId: '1243578-4', details: [
       { productId: 5, quantity: 1},
       { productId: 6, quantity: 1},
     ]},

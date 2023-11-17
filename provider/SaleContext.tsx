@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer } from 'react';
-import { Sale } from '../models/Sale';
+import { Sale, SaleDetail } from '../models/Sale';
 import storage from './Storage';
 
 type State = {
@@ -9,7 +9,6 @@ type State = {
 
 interface Add {
   type: SaleActionType.ADD;
-  payload: Sale;
 }
 interface SET_EDIT {
     type: SaleActionType.EDIT;
@@ -30,11 +29,16 @@ interface Cancel {
     payload: number;
 }
 
-type SaleAction = Add | ADD_INITIAL | Update | Cancel | SET_EDIT;
+interface AddDetail {
+    type: SaleActionType.ADD_DETAIL;
+    payload: [SaleDetail, number];
+}
+
+type SaleAction = Add | ADD_INITIAL | Update | Cancel | SET_EDIT | AddDetail;
 
 const initialState: State = {
     sales: [],
-    edit: {} as Sale,
+    edit: {details: [] as SaleDetail[], total: 0} as Sale,
 };
 
 const SaleContext = createContext<{
@@ -49,21 +53,24 @@ export const enum SaleActionType {
     UPDATE,
     CANCEL,
     EDIT,
+    ADD_DETAIL,
 }
 
 const categoryReducer = (state:State, action: SaleAction) => {
     let sales = [] as Sale[];
     switch (action.type) {
         case SaleActionType.ADD:
-            sales = [...state.sales, action.payload]
+            sales = [...state.sales, state.edit]
             storage.saveObject('sales', sales);
+            state.edit = {details: [] as SaleDetail[], total: 0} as Sale;
             return {
                 ...state,
-                sales: [...state.sales, action.payload],
+                sales: sales,
             };
         case SaleActionType.ADD_INITIAL:
             return {
                 ...state,
+                date: new Date(action.payload.date),
                 sales: [...state.sales, action.payload],
             };
         case SaleActionType.UPDATE:
@@ -86,6 +93,15 @@ const categoryReducer = (state:State, action: SaleAction) => {
             return {
                 ...state,
                 edit: action.payload,
+            }
+        case SaleActionType.ADD_DETAIL:
+            return {
+                ...state,
+                edit: {
+                    ...state.edit,
+                    total: state.edit.total + action.payload[0].quantity * action.payload[1],
+                    details: [...state.edit.details, action.payload[0]]
+                }
             }
         default:
             return state;
