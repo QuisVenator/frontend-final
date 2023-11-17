@@ -14,6 +14,7 @@ import * as FileSystem from 'expo-file-system';
 import * as Print from 'expo-print';
 import { useClientContext } from '../provider/ClientContext';
 import { useProductContext } from '../provider/ProductContext';
+import emailjs from '@emailjs/browser';
 
 const SaleTable = () => {
   const [page, setPage] = React.useState<number>(0);
@@ -37,13 +38,9 @@ const SaleTable = () => {
     setPage(0);
   }, [itemsPerPage, filteredSales]);
 
-  let createPDF = async (sale: Sale, client: Client, products: Product[]) => {
-    const permissions = await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
-    if (!permissions.granted) {
-        return;
-    }
-  
-    const html = `
+
+  const getHtml = (sale: Sale, client: Client, products: Product[]): string => {
+    return `
     <html>
       <header></header>
       <title></title>
@@ -83,9 +80,35 @@ const SaleTable = () => {
         <h3>Total: ${sale.total.toLocaleString('es')}</h3>
       </body>
     </html>`
-    console.log(html)
+  }
+
+  const emailSend = (sale: Sale, client: Client, products: Product[]) => {
+    let templateParams = {
+      to_name: `Manuel Pauls`,
+      to_email: `manuelhackrene@gmail.com`,
+      from_name: 'La Gang',
+      message: getHtml(sale, client, products)
+    };
+    console.log('ENVIADOS: ', JSON.stringify(templateParams));
+
+    emailjs.send('service_r7xcy4r', 'template_4d1c4wn', templateParams, 'mP_tSCsX4TKLo-ox4').then(
+      function (response) {
+        console.log('SUCCESS!', response.status, response.text);
+      },
+      function (error) {
+        console.log('FAILED...', error);
+      }
+    );
+  };
+
+  let createPDF = async (sale: Sale, client: Client, products: Product[]) => {
+    const permissions = await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+    if (!permissions.granted) {
+        return;
+    }
+  
     const print = await Print.printToFileAsync({
-       html: html,
+       html: getHtml(sale, client, products),
        base64: true
     });
   
@@ -134,6 +157,10 @@ const SaleTable = () => {
                     <Button onPress={() => {
                       createPDF(sale, clientState.clients.find(c => c.ruc == sale.clientId) as Client, productState.products);
                     }}><FontAwesome name="file" />
+                    </Button>
+                    <Button onPress={() => {
+                      emailSend(sale, clientState.clients.find(c => c.ruc == sale.clientId) as Client, productState.products);
+                    }}><FontAwesome name="envelope" />
                     </Button>
                   </View>
                 </DataTable.Cell>
