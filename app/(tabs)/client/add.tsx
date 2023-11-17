@@ -8,7 +8,6 @@ import { View } from "../../../components/Themed";
 import { Client } from "../../../models/Client";
 import { ClientActionType, useClientContext } from "../../../provider/ClientContext";
 import { router } from 'expo-router';
-import { SelectList } from 'react-native-dropdown-select-list'
 import { SnackBarActionType, useSnackBarContext } from "../../../provider/SnackBarContext";
 import { ScrollView } from "react-native-gesture-handler";
 
@@ -22,13 +21,6 @@ type ClientAdd = {
 const ClientAdd = () => {
   const [clientAdd, setClientAdd] = React.useState<ClientAdd>({} as ClientAdd);
   const clientContext = useClientContext();
-
-  const [selected, setSelected] = React.useState(false);
-
-  const optionsDoctor = [
-    { key: true, value: 'Doctor' },
-    { key: false, value: 'Paciente' },
-  ]
 
   const { dispatch: snackBarDispatch } = useSnackBarContext();
 
