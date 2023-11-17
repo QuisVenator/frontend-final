@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 import { Button, DataTable, TextInput } from 'react-native-paper';
 import { FontAwesome } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -14,6 +15,7 @@ import * as FileSystem from 'expo-file-system';
 import * as Print from 'expo-print';
 import { useClientContext } from '../provider/ClientContext';
 import { useProductContext } from '../provider/ProductContext';
+import * as MailComposer from 'expo-mail-composer';
 
 const SaleTable = () => {
   const [page, setPage] = React.useState<number>(0);
@@ -21,7 +23,7 @@ const SaleTable = () => {
   const [itemsPerPage, onItemsPerPageChange] = React.useState(
     numberOfItemsPerPageList[1]
   );
-
+  const [status, setStatus] = useState("");
   const { state, dispatch } = useSaleContext();
   const [saleSearch, setSaleSearch] = React.useState('');
   const { state: clientState } = useClientContext();
@@ -36,6 +38,30 @@ const SaleTable = () => {
   React.useEffect(() => {
     setPage(0);
   }, [itemsPerPage, filteredSales]);
+
+
+  const sendEmail = async(file:string) => {
+    var options = {}
+    options = {
+      subject: "Sending email with attachment",
+      recipients: ["diemanuel58@gmail.com"],
+      body: "Enter email body here...",
+      attachments: file
+    }  
+    let promise = new Promise<MailComposer.MailComposerResult>((resolve, reject) => {
+      MailComposer.composeAsync(options)
+        .then((result) => {
+          resolve(result)
+        })
+        .catch((error) => {
+          reject(error)
+        })
+      })
+    promise.then(
+      result => setStatus("Status: email " + result.status),
+      error => setStatus("Status: email " + error.status)
+     )
+  }
 
   let createPDF = async (sale: Sale, client: Client, products: Product[]) => {
     const permissions = await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
@@ -88,12 +114,14 @@ const SaleTable = () => {
        html: html,
        base64: true
     });
+    
   
     try {
       await FileSystem.StorageAccessFramework.createFileAsync(permissions.directoryUri, `Factura_${sale.billId}.pdf`, 'application/pdf')
           .then(async(uri) => {
             if(print.base64 !== undefined) {
               await FileSystem.writeAsStringAsync(uri, print.base64, { encoding: FileSystem.EncodingType.Base64 });
+              sendEmail(uri);
             } else {
               console.log("Error base64 did not work")
             }
