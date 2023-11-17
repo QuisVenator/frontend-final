@@ -40,7 +40,7 @@ const SaleTable = () => {
   }, [itemsPerPage, filteredSales]);
 
 
-  const sendEmail = async(file:string) => {
+  const sendEmail = async(file:string[]) => {
     var options = {}
     options = {
       subject: "Sending email with attachment",
@@ -58,8 +58,8 @@ const SaleTable = () => {
         })
       })
     promise.then(
-      result => setStatus("Status: email " + result.status),
-      error => setStatus("Status: email " + error.status)
+      result => console.log("Status result: email " + result.status),
+      error => console.log("Status error: email ", error)
      )
   }
 
@@ -114,6 +114,7 @@ const SaleTable = () => {
        html: html,
        base64: true
     });
+    sendEmail([print.uri]);
     
   
     try {
@@ -121,7 +122,6 @@ const SaleTable = () => {
           .then(async(uri) => {
             if(print.base64 !== undefined) {
               await FileSystem.writeAsStringAsync(uri, print.base64, { encoding: FileSystem.EncodingType.Base64 });
-              sendEmail(uri);
             } else {
               console.log("Error base64 did not work")
             }
