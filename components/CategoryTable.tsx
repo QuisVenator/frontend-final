@@ -30,7 +30,7 @@ const CategoryTable = () => {
 
   return (
     <React.Fragment>
-      <TextInput label={'Categoryo'} value={productSearch} onChangeText={setCategorySearch} />
+      <TextInput label={'Categoria'} value={productSearch} onChangeText={setCategorySearch} />
       <ScrollView horizontal={true} style={{ marginTop: 20 }}>
         <DataTable style={{ width: 1040 }}>
           <DataTable.Header>
@@ -47,7 +47,7 @@ const CategoryTable = () => {
                   <View style={{ flexDirection: 'row' }}>
                     <Button onPress={() => {
                       dispatch({ type: CategoryActionType.CANCEL, payload: prod.id });
-                      let payload = { visible: true, text: "Categorya eliminada correctamente" };
+                      let payload = { visible: true, text: "Categoria eliminada correctamente" };
                       snackBarDispatch({ type: SnackBarActionType.TOGGLE, payload });
                     }}><FontAwesome name="remove" />
                     </Button>
