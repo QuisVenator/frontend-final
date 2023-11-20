@@ -41,12 +41,12 @@ export const loadMockData = (): [Client[], Category[], Product[], Sale[]] => {
   ]
 
   let products: Product[] = [
-    { id: 1, code: 'no se que es', name: 'Coca Cola', price: 5_000, categoryId: 1},
-    { id: 2, code: 'no se que es', name: 'Pepsi', price: 5_000, categoryId: 1},
-    { id: 3, code: 'no se que es', name: 'Hamburguesa', price: 10_000, categoryId: 2},
-    { id: 4, code: 'no se que es', name: 'Pizza', price: 15_000, categoryId: 2},
-    { id: 5, code: 'no se que es', name: 'Helado', price: 5_000, categoryId: 3},
-    { id: 6, code: 'no se que es', name: 'Torta', price: 10_000, categoryId: 3},
+    { id: 1, code: Math.floor(Math.random() * 1000000).toString(), name: 'Coca Cola', price: 5_000, categoryId: 1},
+    { id: 2, code: Math.floor(Math.random() * 1000000).toString(), name: 'Pepsi', price: 5_000, categoryId: 1},
+    { id: 3, code: Math.floor(Math.random() * 1000000).toString(), name: 'Hamburguesa', price: 10_000, categoryId: 2},
+    { id: 4, code: Math.floor(Math.random() * 1000000).toString(), name: 'Pizza', price: 15_000, categoryId: 2},
+    { id: 5, code: Math.floor(Math.random() * 1000000).toString(), name: 'Helado', price: 5_000, categoryId: 3},
+    { id: 6, code: Math.floor(Math.random() * 1000000).toString(), name: 'Torta', price: 10_000, categoryId: 3},
   ]
 
   let sales: Sale[] = [
